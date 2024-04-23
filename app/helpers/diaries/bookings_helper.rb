@@ -1,0 +1,2 @@
+module Diaries::BookingsHelper
+end
