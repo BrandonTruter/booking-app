@@ -1,13 +1,15 @@
 <div data-controller="entity-ui">
-  <h1 class="font-bold text-4xl">Entities</h1>
-
-  <% if @entities.empty? %>
-    <p>No Entities found</p>
-  <% else %>
-    <% @entities.each do |entity| %>
-      <div class="mt-6">
-        <%= link_to entity.title, entity_diaries_path(entity_id: entity.id), class: 'btn' %>
-      </div>
-    <% end %>
-  <% end %>
+  <h1 class="font-bold text-4xl text-blue-500">Entities</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Content</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render partial: "entity", collection: @entities %>
+    </tbody>
+  </table>
 </div>

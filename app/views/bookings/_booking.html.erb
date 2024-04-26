@@ -1,0 +1,10 @@
+<tr data-controller="booking-ui">
+  <td>
+    <%= "#{booking.status} (#{booking.type})" %>
+    <span data-booking-ui-target="source"><%= booking.generate_json %></span>
+  </td>
+  <td><%= "From #{booking.start_at} to #{booking.end_at} (#{booking.duration})" %></td>
+  <td data-booking-ui-target="output"></td>
+  <td><%= link_to "Edit", edit_booking_path(booking) %></td>
+  <td><%= link_to "Destroy", booking, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %></td>
+</tr>
