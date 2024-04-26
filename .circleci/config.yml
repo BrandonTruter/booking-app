@@ -3,9 +3,16 @@ workflows:
   testing:
     jobs:
       - runner-test
+      - build
 jobs:
   runner-test:
     machine: true
-    resource_class: undefined
+    resource_class: btdevs/deploys
     steps:
       - run: echo "Hi I'm on Runners!"
+  build:
+    macos:
+      xcode: "14.2.0"
+    resource_class: macos.m1.medium.gen1
+    steps:
+      - run: echo "Build for Mac OS X M1!"
