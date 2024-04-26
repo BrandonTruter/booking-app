@@ -7,3 +7,10 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+entity = Entity.create!(
+  username: ENV["GXWEB_USERNAME"],
+  password: ENV["GXWEB_PASSWORD"],
+  description: 'For interfacing with GoodX via an API that is part of the GoodX web',
+  title: 'APP 005'
+)

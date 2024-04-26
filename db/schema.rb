@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_23_053524) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_26_075138) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -29,15 +29,28 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_23_053524) do
     t.index ["diary_id"], name: "index_bookings_on_diary_id"
   end
 
+  create_table "debtors", force: :cascade do |t|
+    t.integer "uid"
+    t.string "name"
+    t.integer "entity_uid"
+    t.string "patient_uids"
+    t.bigint "booking_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["booking_id"], name: "index_debtors_on_booking_id"
+  end
+
   create_table "diaries", force: :cascade do |t|
     t.string "title"
     t.text "description"
     t.date "start_date"
     t.date "end_date"
     t.integer "booking_id"
-    t.bigint "entities_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "set_default", default: true
+    t.uuid "external_id"
+    t.bigint "entities_id", null: false
     t.index ["entities_id"], name: "index_diaries_on_entities_id"
   end
 
@@ -52,5 +65,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_23_053524) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "patients", force: :cascade do |t|
+    t.integer "uid"
+    t.string "name"
+    t.integer "entity_uid"
+    t.integer "debtor_uid"
+    t.bigint "booking_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["booking_id"], name: "index_patients_on_booking_id"
+  end
+
   add_foreign_key "bookings", "diaries"
+  add_foreign_key "debtors", "bookings"
+  add_foreign_key "diaries", "entities", column: "entities_id"
+  add_foreign_key "patients", "bookings"
 end
