@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_26_075138) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_26_143809) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "bookings", force: :cascade do |t|
     t.text "reason"
-    t.string "type"
+    t.string "booking_type"
     t.string "status"
     t.datetime "end_at"
     t.datetime "start_at"
@@ -50,8 +50,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_26_075138) do
     t.datetime "updated_at", null: false
     t.boolean "set_default", default: true
     t.uuid "external_id"
-    t.bigint "entities_id", null: false
-    t.index ["entities_id"], name: "index_diaries_on_entities_id"
+    t.bigint "entity_id"
   end
 
   create_table "entities", force: :cascade do |t|
@@ -76,8 +75,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_26_075138) do
     t.index ["booking_id"], name: "index_patients_on_booking_id"
   end
 
-  add_foreign_key "bookings", "diaries"
   add_foreign_key "debtors", "bookings"
-  add_foreign_key "diaries", "entities", column: "entities_id"
+  add_foreign_key "diaries", "bookings"
   add_foreign_key "patients", "bookings"
 end
