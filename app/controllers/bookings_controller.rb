@@ -1,44 +1,76 @@
 class BookingsController < ApplicationController
+  before_action :set_booking, only: [:show, :edit, :update, :destroy]
+
   def index
-    @bookings = Booking.all
+    @bookings = Booking.all.order(created_at: :desc)
   end
 
   def new
     @booking = Booking.new
   end
 
+  def show
+  end
+
   def create
     @booking = Booking.new(permitted_params)
 
-    if @booking.save
-      redirect_to edit_booking_path(@booking)
-    else
-      render :new
+    respond_to do |format|
+      if @booking.save
+        format.html {
+          redirect_to booking_path(@booking), notice: "Booking scheduled successfully."
+        }
+      else
+        format.html { render :new }
+      end
     end
   end
 
   def edit
-    @booking = Booking.find(params[:idi])
   end
 
   def update
-    @booking = Booking.find(params[:id])
-
-    if @booking.update(permitted_params)
-      redirect_to edit_booking_path(@booking)
-    else
-      render :edit
+    respond_to do |format|
+      if @booking.update(permitted_params)
+        format.html { redirect_to bookings_path }
+        format.turbo_stream {
+          render turbo_stream: turbo_stream.replace("booking_#{@booking.id}", partial: 'booking', locals: { booking: @booking })
+        }
+      else
+        format.html { redirect_to edit_booking_path }
+      end
     end
   end
 
   def destroy
-    @booking = Booking.find(params[:id])
-    @booking.destroy
+    respond_to do |format|
+      if @booking.destroy
+        format.html { redirect_to bookings_path }
+        format.turbo_stream
+      else
+        format.html { redirect_to bookings_path, notice: @booking.errors.full_message }
+      end
+    end
+  end
+
+  # GET /bookings/search?date='abc'
+  def search
+    @bookings = Booking.where("start_at LIKE ?", "%#{params[:date]}%").order(created_at: :desc)
+    respond_to do |format|
+      format.json {
+        render json: render_to_string(partial: 'bookings/booking', collection: @bookings, formats: [:html])
+      }
+    end
   end
 
   private
 
+  def set_booking
+    @booking = Booking.joins(:diary).find(params[:id])
+  end
+
   def permitted_params
-    params.require(:booking).permit(:reason, :start_date, :end_date, :type, :status)
+    params.require(:booking)
+           .permit(:reason, :start_at, :end_at, :booking_type, :status, :diary_id)
   end
 end
