@@ -1,18 +1,21 @@
-version: 2.1
-workflows:
-  testing:
-    jobs:
-      - runner-test
-      - build
+version: '2.1'
+orbs:
+  heroku: circleci/heroku@2.0
 jobs:
-  runner-test:
-    machine: true
-    resource_class: btdevs/deploys
+  deploy:
+    executor: heroku/default
     steps:
-      - run: echo "Hi I'm on Runners!"
-  build:
-    macos:
-      xcode: "14.2.0"
-    resource_class: macos.m1.medium.gen1
-    steps:
-      - run: echo "Build for Mac OS X M1!"
+      - checkout
+      - heroku/install
+      - run:
+          command: >
+            echo "The command above installs Heroku, the command below deploys.
+            What you do inbetween is up to you!"
+      - heroku/deploy-via-git
+workflows:
+  heroku_deploy:
+    jobs:
+      - deploy
+      - heroku/deploy-via-git:
+          post-steps:
+            - run: bundle install && bundle exec rake db:prepare
