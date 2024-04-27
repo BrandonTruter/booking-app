@@ -1,15 +1,16 @@
-<div data-controller="entity-ui">
-  <h1 class="font-bold text-4xl text-blue-500">Entities</h1>
-  <table>
-    <thead>
+<div class="border-b border-gray-900/10 pb-12">
+  <h1 class="text-base font-semibold text-4xl text-blue-500">GXWeb Entities</h1>
+  <table class="tftable" border="1">
+		<tbody>
+			<tr>
+		    <th>UID</th>
+		    <th>Title</th>
+		    <th>Description</th>
+        <th>Appointments</th>
+			</tr>
       <tr>
-        <th>Title</th>
-        <th>Content</th>
-        <th colspan="3"></th>
+        <%= render partial: "entity", collection: @entities %>
       </tr>
-    </thead>
-    <tbody>
-      <%= render partial: "entity", collection: @entities %>
     </tbody>
   </table>
 </div>

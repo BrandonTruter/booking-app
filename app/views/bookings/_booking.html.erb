@@ -1,10 +1,9 @@
-<tr data-controller="booking-ui">
-  <td>
-    <%= "#{booking.status} (#{booking.type})" %>
-    <span data-booking-ui-target="source"><%= booking.generate_json %></span>
-  </td>
-  <td><%= "From #{booking.start_at} to #{booking.end_at} (#{booking.duration})" %></td>
-  <td data-booking-ui-target="output"></td>
-  <td><%= link_to "Edit", edit_booking_path(booking) %></td>
-  <td><%= link_to "Destroy", booking, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %></td>
-</tr>
+<%= turbo_frame_tag "booking_#{booking.id}" do %>
+  <div style='border-style: ridge; padding: 20px;' class='mt-2'>
+    <div class='mt-2 d-flex'>
+      <%= link_to "Edit", edit_booking_path(booking), style: 'margin-left: 5px' %>
+      <%= link_to "Delete", booking_path(booking), style: 'margin-left: 5px', data: {confirm: "Are you sure?", "turbo-method": :delete} %>
+      <%#= link_to "Diary", diary_path(booking&.diary) %>
+    </div>
+  </div>
+<% end %>

@@ -1,5 +1,7 @@
 <div class="border-b border-gray-900/10 pb-12">
   <h1 class="text-base font-semibold text-4xl text-blue-500">New Booking</h1>
 
-  <%= render partial: "form", locals: { booking: @booking } %>
+  <%= turbo_frame_tag "create_booking_form" do %>
+    <%= render partial: 'form', object: @booking %>
+  <% end %>
 </div>

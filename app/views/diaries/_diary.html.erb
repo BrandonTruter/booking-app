@@ -1,5 +1,8 @@
-<tr>
+<tr data-diary-ui-url-value="<%= bookings_path(diary_id: diary&.id) %>"
+    data-diary-ui-id-value="<%= diary&.external_id.presence || diary&.id %>"
+    data-diary-ui-date-value="<%= diary&.start_date %>">
+  <td><%= diary.id %></td>
   <td><%= diary.title %></td>
-  <td><%= diary.description %></td>
-  <td><%= "#{diary.start_at} to #{diary.end_at}" %></td>
+  <td><%= diary.start_date %></td>
+  <td><%= render partial: "booking", collection: diary&.bookings || Booking.all %>
 </tr>

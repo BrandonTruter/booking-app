@@ -1,4 +1,16 @@
-<%= form_with model: booking do |form| %>
+<%= form_with(model: @booking, local: true) do |f| %>
+  <% if @booking.errors.any? %>
+    <div class="alert alert-danger mt-2" role="alert">
+      <ul>
+        <% @booking.errors.full_messages.each do |error| %>
+          <li><%= error %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.hidden_field :diary_id, value: @booking&.diary&.id || Diary.last.id %>
+
   <div class="space-y-12">
     <div class="border-b border-gray-900 pb-12">
       <h3 class="text-base font-semibold leading-7 text-gray-900">Diary Schedule</h3>
@@ -12,23 +24,23 @@
         </div>
 
         <div class="sm:col-span-3">
-          <label for="booking_start_date" class="block text-sm font-medium leading-6 text-gray-900">When is your appointment?</label>
+          <label for="booking_start_at" class="block text-sm font-medium leading-6 text-gray-900">When is your appointment?</label>
           <div class="mt-2">
-            <input type="datetime-local" name="booking[start_date]" id="booking_start_date" autocomplete="start-date" class="form-input block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <input type="datetime-local" name="booking[start_at]" id="booking_start_at" autocomplete="start-at" class="form-input block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
 
         <div class="sm:col-span-3">
-          <label for="booking_end_date" class="block text-sm font-medium leading-6 text-gray-900">When does your appointment end?</label>
+          <label for="booking_end_at" class="block text-sm font-medium leading-6 text-gray-900">When does your appointment end?</label>
           <div class="mt-2">
-            <input id="booking_end_date" name="booking[end_date]" type="datetime-local" autocomplete="end-date" class="form-input block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <input id="booking_end_at" name="booking[end_at]" type="datetime-local" autocomplete="end-at" class="form-input block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
 
         <div class="sm:col-span-3">
           <label for="booking_type" class="block">
             <span class="text-gray-700">What type of appointment is it?</span>
-            <select id="booking_type" name="booking[type]" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            <select id="booking_type" name="booking[booking_type]" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
               <option>Meeting</option>
               <option>Consultation</option>
               <option>Out of office</option>

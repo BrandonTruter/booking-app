@@ -1,5 +1,11 @@
-<tr>
-  <td><%= entity.title %></td>
-  <td><%= entity.description %></td>
-  <td><%= link_to "Diary", diaries_path(entity_id: entity.id), title: 'Open the diary', class: 'btn btn-primary' %></td>
-</tr>
+<td><%= entity.uid %></td>
+<td><%= entity.title %></td>
+<td><%= entity.description.truncate(20) %></td>
+<td data-controller="entity-ui">
+  <a href="<%= diaries_path(entity_id: entity.id) %>" name="session-button" id="js-auth-btn"
+          class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          data-entity-ui-credentials-value="<%= entity&.token || "#{entity.username}:#{entity.password}" %>"
+          data-action="click->entity-ui#authenticate">
+    <b>DIARY</b>
+  </a>
+</td>
