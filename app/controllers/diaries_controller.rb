@@ -8,6 +8,6 @@ class DiariesController < ApplicationController
   private
 
   def load_entity
-    @entity = Entity.last
+    @entity = Entity.find(params[:entity_id])
   end
 end

@@ -8,8 +8,9 @@ export default class extends Controller {
     e.preventDefault();
     e.stopImmediatePropagation();
     const value = this.paramsTarget.value;
+    const endpoint = this.paramsTarget.dataset.searchUrl;
 
-    fetch(`/bookings/search?search=${value}`, {
+    fetch(`${endpoint}?search=${value}`, {
       contentType: 'application/json',
       hearders: 'application/json'
     })

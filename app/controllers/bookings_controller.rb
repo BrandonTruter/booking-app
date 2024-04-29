@@ -55,7 +55,7 @@ class BookingsController < ApplicationController
 
   # GET /bookings/search?date='abc'
   def search
-    @bookings = Booking.where("start_at LIKE ?", "%#{params[:date]}%").order(created_at: :desc)
+    @bookings = Booking.where("start_at >= ? AND end_at <= ?", params[:date], params[:date])#.order(created_at: :desc)
     respond_to do |format|
       format.json {
         render json: render_to_string(partial: 'bookings/booking', collection: @bookings, formats: [:html])
