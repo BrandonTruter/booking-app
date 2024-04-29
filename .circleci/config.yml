@@ -17,6 +17,4 @@ workflows:
   heroku_deploy:
     jobs:
       - deploy
-      - heroku/deploy-via-git:
-          post-steps:
-            - run: bundle exec rails db:prepare
+      - heroku/deploy-via-git
