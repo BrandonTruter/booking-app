@@ -1,23 +1,30 @@
-<%= turbo_frame_tag "create_booking_form" do %>
-  <%= link_to '+ Schedule appointment', new_booking_path, class: 'btn btn-dark' %>
-<% end %>
+<div class="container flex border-b border-gray-900/10 pb-12">
+  <h1 class="text-base font-semibold text-5xl text-blue-500">GXWeb Bookings</h1>
 
-<div class='mt-4' data-controller='search'>
-  <%= datetime_field_tag :query,'', placeholder: 'Search by date', data: {
-        :action => 'change->search#search',
-        :'search-target' => 'params'
-  } %>
-</div>
+  <div class='flex flex-col mt-4' data-controller='search'>
+    <%= datetime_field_tag :query,'', placeholder: 'Search by date', data: {
+          :action => 'change->search#search',
+          :search_url => collection_path,
+          :'search-target' => 'params'
+    } %>
+  </div>
 
-<div id="bookings" class='mt-4'>
-  <h2 class='mt-3 text-blue-500'>Bookings</h2>
+  <div id="bookings" class='flex flex-col mt-4'>
+    <h2 class='mt-3 text-blue-500'></h2>
 
-  <%= turbo_stream_from 'bookings' %>
-  <%= turbo_frame_tag "bookings" do %>
-    <% if @bookings.any? %>
-      <%= render @bookings %>
-    <% else %>
-      <p>No bookings available</p>
+    <%= turbo_stream_from 'bookings' %>
+    <%= turbo_frame_tag "bookings" do %>
+      <% if @bookings.any? %>
+        <%= render @bookings %>
+      <% else %>
+        <p>No bookings available</p>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
+
+  <div class="flex flex-col">
+    <%= turbo_frame_tag "create_booking_form" do %>
+      <%= link_to 'New Appointment', new_booking_path, class: 'btn btn-dark' %>
+    <% end %>
+  </div>
 </div>
