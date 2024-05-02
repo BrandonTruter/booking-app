@@ -1,0 +1,32 @@
+<div class="container border-b border-gray-900/10 py-8" data-controller="booking-ui">
+  <h1 class="text-blue-500 text-4xl font-semibold mt-10">Bookings</h1>
+
+  <div class="mt-10" data-controller='search'>
+    <%= date_field_tag :date,'', placeholder: 'Search by date', data: {
+            :action => 'change->search#search',
+            :search_url => search_bookings_path,
+            :'search-target' => 'params' } %>
+
+      <div class="flex mt-6 break-before-all">
+        <%= turbo_frame_tag "create_booking_form" do %>
+          <%= link_to 'New Appointment', new_booking_path, class: 'rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' %>
+        <% end %>
+      </div>
+  </div>
+
+  <div class="flex w-full bg-light">
+    <div id="bookings" class='flex flex-col mt-4'>
+    <%= turbo_stream_from 'bookings' %>
+      <%= turbo_frame_tag "bookings" do %>
+        <% if @bookings.any? %>
+          <%= render @bookings %>
+        <% else %>
+          <p>No bookings available</p>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div id="patients" class="flex flex-col break-before-all my-11"></div>
+    <div id="debtors" class="flex flex-col"></div>
+  </div>
+</div>

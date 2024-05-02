@@ -1,0 +1,66 @@
+# This workflow uses actions that are not certified by GitHub.  They are
+# provided by a third-party and are governed by separate terms of service,
+# privacy policy, and support documentation.
+#
+# This workflow will install a prebuilt Ruby version, install dependencies, and
+# run tests and linters.
+name: "Release to production"
+on:
+ push:
+   branches: [ "main" ]
+ pull_request:
+   branches: [ "main" ]
+jobs:
+ live:
+   runs-on: ubuntu-latest
+   services:
+     postgres:
+       image: postgres:11-alpine
+       ports:
+         - "5432:5432"
+       env:
+         POSTGRES_DB: dddggvmj9iak2k
+         POSTGRES_USER: ufbg3rt572t4lp
+         POSTGRES_PASSWORD: p4d1ef751e029472c3c437a01b098c069aecac34c0f468a92f604130214167389
+   env:
+     RAILS_ENV: production
+     DATABASE_URL: "postgres://ufbg3rt572t4lp:p4d1ef751e029472c3c437a01b098c069aecac34c0f468a92f604130214167389@c7gljno857ucsl.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/dddggvmj9iak2k"
+   steps:
+     - name: Checkout code
+       uses: actions/checkout@v3
+     # Add or replace dependency steps here
+     - name: Install Ruby and gems
+       uses: ruby/setup-ruby@v1
+     # Add or replace database setup steps here
+     - name: Set up database schema
+       run: bin/rails db:schema:load
+ test:
+   runs-on: ubuntu-latest
+   services:
+     postgres:
+       image: postgres:11-alpine
+       ports:
+         - "5432:5432"
+       env:
+         POSTGRES_DB: booking_app_test
+         POSTGRES_USER: booking_app
+         POSTGRES_PASSWORD: password
+   env:
+     RAILS_ENV: test
+     DATABASE_URL: "postgres://booking_app:password@localhost:5432/booking_app_test"
+   steps:
+     - name: Checkout code
+       uses: actions/checkout@v3
+     # Add or replace dependency steps here
+     - name: Install Ruby and gems
+       uses: ruby/setup-ruby@v1.174.0
+       with:
+         bundler-cache: true
+     # Add or replace database setup steps here
+     - name: Install dependencies
+        run: bundle install
+      # Add or replace database setup steps here
+      - name: Set up database schema
+        run: bundle exec rake db:prepare
+      - name: Run specs
+        run: bundle exec rake spec

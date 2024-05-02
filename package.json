@@ -1,0 +1,6 @@
+{
+  "name": "Ruby getting started guide",
+  "dependencies": {
+    "axios-on-rails": "^0.0.1"
+  }
+}
