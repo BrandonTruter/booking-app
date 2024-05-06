@@ -1,14 +1,6 @@
 class Api::V1::DiariesController < ApplicationController
-  before_action :fetch_diaries
-
-  # GET /diaries
+  # GET /api/v1/diaries
   def index
-    render json: @diaries
-  end
-
-  private
-
-  def fetch_diaries
-    @diaries = GxWeb::Client.new.list_diaries || Diary.all
+    render json: GxWeb::Client.new.list_diaries || Diary.all
   end
 end
