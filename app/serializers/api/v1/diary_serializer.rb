@@ -5,11 +5,7 @@ module Api
     class DiarySerializer < ActiveModel::Serializer
       attributes :uid, :name, :uuid
 
-      has_many :booking_types, :booking_statuses
-
-      def id
-        object.uid
-      end
+      has_many :booking_types
     end
   end
 end

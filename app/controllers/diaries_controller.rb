@@ -3,6 +3,13 @@ class DiariesController < ApplicationController
 
   def index
     @diaries = Diary.all
+
+    respond_to do |format|
+      format.html
+      format.json {
+        render json: @diaries
+      }
+    end
   end
 
   private

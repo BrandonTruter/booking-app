@@ -1,6 +1,9 @@
 class DiarySerializer < ActiveModel::Serializer
-  attributes :id, :name, :description
+  attributes :id, :name
 
-  has_many :bookings
   belongs_to :entity
+
+  def url
+    diary_url(object)
+  end
 end
