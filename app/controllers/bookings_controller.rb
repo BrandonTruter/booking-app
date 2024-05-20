@@ -1,6 +1,6 @@
 class BookingsController < ApplicationController
   before_action :set_booking, only: [:show, :edit, :update, :destroy]
-  before_action :load_booking_data, only: [:edit]
+  before_action :load_booking_data, only: [:new, :edit]
 
   def index
     @bookings = Booking.all.order(created_at: :desc)
@@ -8,8 +8,6 @@ class BookingsController < ApplicationController
 
   def new
     @booking = Booking.new
-    @patients = Patient.all
-    @debtors = Debtor.all
   end
 
   def show
@@ -64,7 +62,7 @@ class BookingsController < ApplicationController
   end
 
   def search
-    @bookings = Booking.where(start_at: params[:date].to_date.all_day)
+    @bookings = Booking.where(start_time: params[:date].to_date.all_day)
 
     respond_to do |format|
       format.json {
@@ -96,19 +94,7 @@ class BookingsController < ApplicationController
   end
 
   def load_booking_data
-    load_patients
-    load_debtors
-  end
-
-  def client
-    @client ||= GxWeb::Client.new
-  end
-
-  def load_patients
-    @patients ||= client.list_patients | @booking.patients
-  end
-
-  def load_debtors
-    @debtors ||= client.list_debtors | @booking.debtors
+    @patients = Patient.all
+    @debtors = Debtor.all
   end
 end

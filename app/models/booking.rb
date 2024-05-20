@@ -22,8 +22,6 @@ class Booking < ApplicationRecord
   ].freeze
 
   validates :diary, :reason, :start_time, presence: true
-  # validates :booking_type, inclusion: { in: AVAILABLE_TYPES }
-  # validates :status, inclusion: { in: AVAILABLE_STATES }
 
   scope :earliest, -> { reorder(start_time: :asc) }
   scope :latest, -> { reorder(start_time: :desc) }
