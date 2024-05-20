@@ -1,4 +1,4 @@
-<div class="container border-b border-gray-900/10 mt-6 pb-12">
+<div class="container border-b border-gray-900/10 mt-6 pb-12" data-controller="entity-ui">
   <h2 class="text-blue-500 text-4xl font-semibold mt-10">Entities</h2>
 
   <table class="table flex-table table-striped tftable" border="1">
@@ -19,7 +19,13 @@
             <%= entity.title %>
           </td>
           <td class="px-3 py-4 text-sm font-normal text-left text-red-600 underline break-words bg-light">
-            <%= link_to "Login", entity_diaries_path(entity), class: 'rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' %>
+            <%= link_to "Login", entity_diaries_path(entity),
+                                 data: {
+                                  username: entity.username,
+                                  password: entity.password,
+                                  action: "click->entity-ui#login"
+                                 },
+                                 class: 'rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' %>
           </td>
         </tr>
       <% end %>
