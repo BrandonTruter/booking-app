@@ -12,54 +12,48 @@ module GxWeb
       end
 
       def login
-        auth_session
+        response = auth_session
+
+        if response.success?
+          auth_response = response.body["data"]
+          @auth_token = auth_response["uid"]
+          @entity = Entity.find_by(username: credentials.username, password: credentials.password)
+          @entity.update!(token: @auth_token) if @entity.present?
+
+          HTTP::Cookie.new("session_id", "\"\\\"#{@auth_token}\\\"_#{credentials.username}\"")
+          HTTP::Cookie.new("token", @auth_token, for_domain: true, path: '/')
+        end
+
+        self
       end
 
       private
 
       def auth_session
-        url = URI("#{@credentials.base_url}/api/session")
-        https = Net::HTTP.new(url.host, url.port)
-        https.use_ssl = true
-        request = Net::HTTP::Post.new(url)
-        request.body = auth_body(credentials.username, credentials.password)
-
-        response = https.request(request)
-        parse_response(response)
-      end
-
-      def auth_body(user, pass)
-        JSON.dump({
-          "model": {
-            "timeout": TIMEOUT
-          },
-          "auth": [
-            [
-              "password",
-              {
-                "username": user,
-                "password": pass
-              }
-            ]
-          ]
-        })
-      end
-
-      def parse_response(response)
-        response = JSON.parse(response.body)
-        uid_token = response["data"]["uid"]
-        username = @credentials.username
-        @auth_token = uid_token
-        @entity = Entity.find_by(username: username, password: @credentials.password)
-
-        if @entity.present?
-          @entity.token = uid_token
-          @entity.save!
+        # begin
+        conn = Faraday.new(credentials.base_url) do |config|
+          config.request :json
+          config.response :json
+          config.response :raise_error
+          config.response :logger, Rails.logger, headers: true, bodies: true, log_level: :debug
         end
 
-        _token_cookie = HTTP::Cookie.new("uid", uid_token, domain: 'localhost:3000', for_domain: true, path: '/api/v1')
-        _session_cookie = HTTP::Cookie.new("session_id", "\"\\\"#{uid_token}\\\"_#{username}\"")
-        response
+        conn.post('/api/session') do |req|
+          req.headers[:content_type] = 'application/json'
+          req.body = JSON.generate({
+            model: {
+              timeout: 259200
+            },
+            auth: [
+              [
+                "password", {
+                  username: credentials.username,
+                  password: credentials.password
+                }
+              ]
+            ]
+          })
+        end
       end
     end
   end
