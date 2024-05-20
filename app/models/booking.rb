@@ -21,33 +21,33 @@ class Booking < ApplicationRecord
     'Out of office'
   ].freeze
 
-  validates :diary, :reason, :status, :start_at, :booking_type, presence: true
-  validates :booking_type, inclusion: { in: AVAILABLE_TYPES }
-  validates :status, inclusion: { in: AVAILABLE_STATES }
+  validates :diary, :reason, :start_time, presence: true
+  # validates :booking_type, inclusion: { in: AVAILABLE_TYPES }
+  # validates :status, inclusion: { in: AVAILABLE_STATES }
 
-  scope :earliest, -> { reorder(start_at: :asc) }
-  scope :latest, -> { reorder(start_at: :desc) }
+  scope :earliest, -> { reorder(start_time: :asc) }
+  scope :latest, -> { reorder(start_time: :desc) }
   scope :daily, -> {
-    where(start_at: (Time.now.midnight - 1.day)..Time.now.midnight)
+    where(start_time: (Time.now.midnight - 1.day)..Time.now.midnight)
   }
   scope :weekly, -> {
-    where(start_at: (7.days.ago)..Time.now.midnight)
+    where(start_time: (7.days.ago)..Time.now.midnight)
   }
   scope :monthly, -> {
     beginning_of_month = Date.today.beginning_of_month
     end_of_month = beginning_of_month.end_of_month
-    where(start_at: beginning_of_month..end_of_month)
+    where(start_time: beginning_of_month..end_of_month)
   }
 
   def scheduled_at
-    self.start_at.to_date
+    self.start_time.to_date
   end
 
   def daily_appointment
-    where(start_at: Date.today.all_day)
+    where(start_time: Date.today.all_day)
   end
 
   def timestamp
-    start_at || end_at
+    scheduled_at || daily_appointment
   end
 end

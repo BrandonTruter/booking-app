@@ -1,24 +1,29 @@
 <%= turbo_frame_tag "booking_#{booking.id}" do %>
-  <div class="flex flex-col">
-    <table class='flex-table'>
+  <table class='booking-table'>
+    <tbody>
       <tr>
-        <td class="px-3 py-4 text-sm font-normal text-left text-gray-600 bg-gray-50">
+        <td class="text-sm font-normal text-left text-gray-600 bg-gray-50">
           <%= booking.reason %>
         </td>
-        <td class="px-3 py-4 text-sm font-normal text-left text-gray-600 bg-gray-50">
-          <%= booking.status %>
+        <td class="text-sm font-normal text-left text-gray-600 bg-gray-50">
+          <%= booking.start_time %>
         </td>
-        <td class="px-3 py-4 text-sm font-normal text-left text-gray-600 bg-gray-50">
-          <%= booking.start_at %>
+        <td class="table-links text-blue-500">
+          <%= link_to booking_path(booking), data: {turbo: false}, title: "Show Calendar" do %>
+            <i id="calendar" class="icon fa fa-calendar calendar cursor-pointer"></i>
+          <% end %>
         </td>
-        <td class="px-3 py-4 text-sm font-normal text-left text-red-600 underline break-words bg-light">
-          <%= link_to "Edit", edit_booking_path(booking), class: "bg-gray-800 hover:bg-gray-700 text-white text-sm font-semibold px-4 py-1 border border-gray-700 rounded-lg shadow-sm" %>
-          </td>
-          <td colspan="2" class="px-3 py-4 text-sm font-normal text-left text-red-600 underline break-words bg-light">
-            <%= link_to "Delete", booking_path(booking), style: 'margin-left: 5px', data: {confirm: "Are you sure?", "turbo-method": :delete} %>
-            </td>
+        <td class="table-links text-gray-600">
+          <%= link_to edit_booking_path(booking), data: { action: "click->booking-ui#showForm" } do %>
+            <i id="edit" class="icon fa fa-edit edit cursor-pointer"></i>
+          <% end %>
+        </td>
+        <td class="table-links text-red-600">
+          <%= link_to booking_path(booking), style: 'margin-left: 5px', data: {confirm: "Are you sure?", "turbo-method": :delete} do %>
+            <i id="trash" class="icon fa fa-trash trash cursor-pointer"></i>
+          <% end %>
         </td>
       </tr>
-    </table>
-  </div>
+    </tbody>
+  </table>
 <% end %>
