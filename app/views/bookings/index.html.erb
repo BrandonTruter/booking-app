@@ -9,14 +9,30 @@
 
       <div class="flex mt-6 break-before-all">
         <%= turbo_frame_tag "create_booking_form" do %>
-          <%= link_to 'New Appointment', new_booking_path, class: 'rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' %>
+          <%= link_to 'New Appointment', new_booking_path,
+                class: 'rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+                data: { action: "click->booking-ui#showForm" } %>
         <% end %>
       </div>
   </div>
 
-  <div class="flex w-full bg-light">
-    <div id="bookings" class='flex flex-col mt-4'>
-    <%= turbo_stream_from 'bookings' %>
+  <div class="w-full bg-light" id="diary-bookings">
+    <div id="bookings" class='flex flex-col mt-10 w-1/2'>
+      <%= turbo_stream_from 'bookings' %>
+
+      <table class="booking-table <%= 'hidden' if @bookings.empty? %>">
+        <thead>
+          <tr>
+            <th class="text-sm font-semibold text-left text-gray-700 bg-gray-200">
+              REASON
+            </th>
+            <th class="text-sm font-semibold text-left text-gray-700 bg-gray-200">
+              DATE
+            </th>
+            <th colspan="3" class="table-links text-sm font-semibold text-left text-gray-700 bg-gray-200"></th>
+          </tr>
+        </thead>
+      </table>
       <%= turbo_frame_tag "bookings" do %>
         <% if @bookings.any? %>
           <%= render @bookings %>
@@ -25,8 +41,10 @@
         <% end %>
       <% end %>
     </div>
-
-    <div id="patients" class="flex flex-col break-before-all my-11"></div>
-    <div id="debtors" class="flex flex-col"></div>
+    <br />
+    <div class="flex flex-col">
+      <div id="patients" class="flex w-1/2"></div>
+      <div id="debtors" class="flex w-1/2"></div>
+    </div>
   </div>
 </div>

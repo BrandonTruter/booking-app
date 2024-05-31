@@ -1,33 +1,17 @@
 <div class="container border-b border-gray-900/10 mt-6 pb-12" data-controller="diary-ui">
-  <h2 class="font-semibold text-4xl text-blue-500">GXWeb Diaries</h2>
+  <h2 class="font-semibold text-4xl text-blue-500">Diaries</h2>
 
   <div id="diaries">
-    <table class="w-3/5 mt-10 border-separate table-auto text-slate-500">
+    <table class="tftable mt-10">
       <thead>
         <tr>
-          <th class="p-3 text-sm font-semibold text-left text-gray-700 bg-gray-200">ID</th>
-          <th class="p-3 text-sm font-semibold text-left text-gray-700 bg-gray-200">Name</th>
-          <th colspan="3" class="p-3 text-sm font-semibold text-left text-gray-700 bg-gray-200">Bookings</th>
+          <th class="text-left">UID</th>
+          <th class="text-left">NAME</th>
+          <th colspan="3" class="text-center">BOOKINGS</th>
         </tr>
       </thead>
       <tbody>
-        <% @diaries.each do |diary| %>
-          <tr>
-            <td class="px-3 py-4 text-sm font-normal text-left text-gray-600 bg-gray-50">
-              <%= diary.id %>
-            </td>
-            <td class="px-3 py-4 text-sm font-normal text-left text-gray-600 bg-gray-50" id="name-field">
-              <%= diary.title %>
-            </td>
-            <td class="px-3 py-4 text-sm font-normal text-left text-gray-600 bg-gray-50" id="state-field" title="States">
-            </td>
-            <td class="px-3 py-4 text-sm font-normal text-left text-gray-600 bg-gray-50" id="type-field" title="TYPES">
-            </td>
-            <td class="px-3 py-4 text-sm font-normal text-left text-gray-600 bg-gray-50">
-              <%= link_to "View", bookings_path(diary_id: diary.id), class: 'rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' %>
-            </td>
-          </tr>
-        <% end %>
+        <%= render partial: "diary", collection: @diaries %>
       </tbody>
     </table>
   </div>

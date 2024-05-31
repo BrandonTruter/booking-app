@@ -4,35 +4,9 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   connect() {
     console.log('CONNECTED BOOKING API');
-
     // axios.get('/api/v1/bookings')
     //   .then(function (response) {
-    //     console.log(response, "BOOKINGS API");
-    //     // this.tableTarget.outerHTML =
-    //     // document.querySelector('#bookings').innerHTML = `<table>
-    //     //   <thead>
-    //     //      <tr>
-    //     //         <th>UID</th>
-    //     //         <th>Entity</th>
-    //     //         <th>Booking Type</th>
-    //     //         <th>Name</th>
-    //     //         <th>UUID</th>
-    //     //         <th>Disabled</th>
-    //     //      </tr>
-    //     //    </thead>
-    //     //    <tbody data-target="table.body">
-    //     //       ${response.data.forEach(resp => {
-    //     //         `<tr data-target="table.row">
-    //     //           <td data-target="table.cell">${resp.uid}</td>
-    //     //           <td data-target="table.cell">${resp.entity_uid}</td>
-    //     //           <td data-target="table.cell">${resp.booking_type_uid}</td>
-    //     //           <td data-target="table.cell">${resp.name}</td>
-    //     //           <td data-target="table.cell">${resp.uuid}</td>
-    //     //           <td data-target="table.cell">${resp.disabled}</td>
-    //     //         </tr>`
-    //     //       })}
-    //     //     </tbody>
-    //     //   </table>`
+    //     console.log(response);
     //   })
     //   .catch(function (error) {
     //     console.log(error);
@@ -40,36 +14,62 @@ export default class extends Controller {
     //   .finally(function () {
     //     // always executed
     //   })
+  }
 
-    //   axios.get('/api/v1/debtors').then(function (response) {
-    //     console.log(response, "DEBBTORS API");
-    //     // document.querySelector('#debtors').innerHTML = `<table>
-    //     //   <thead>
-    //     //      <tr>
-    //     //         <th>UID</th>
-    //     //         <th>Entity</th>
-    //     //         <th>Name</th>
-    //     //         <th>Surname</th>
-    //     //      </tr>
-    //     //    </thead>
-    //     //    <tbody class="table-body">
-    //     //       ${response.data.forEach((resp) => {
-    //     //         return `<tr class="table-row">
-    //     //           <td class="table-cell">${resp.uid}</td>
-    //     //           <td class="table-cell">${resp.entity_uid}</td>
-    //     //           <td class="table-cell">${resp.name}</td>
-    //     //           <td class="table-cell">${resp.surname}</td>
-    //     //         </tr>`
-    //     //       })}
-    //     //     </tbody>
-    //     //   </table>`
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   })
-    //   .finally(function () {
-    //     // always executed
-    //   });
+  // sendUpdate() {
+  //   axios.post('http://localhost:3000/signup', {signupObj})
+  //   axios.patch('http://localhost:3000/:id', {patchObj})
+  //   axios.delete('http://localhost:3000/users/:id')
+  // }
 
+  showForm() {
+    document.querySelectorAll(".booking-table").forEach(item => item.classList.add('hidden'))
+  }
+
+  hideForm() {
+    document.querySelector('form').classList.add('hidden');
+    document.querySelectorAll(".booking-table").forEach(item => item.classList.remove('hidden'))
+  }
+
+  renderDebtors() {
+    axios.get('/api/v1/debtors')
+      .then(function (response) {
+        const dataRow = [], dataHead = `<tr><th class="p-3 text-sm font-semibold text-left text-gray-700 bg-gray-200">DEBTORS</th></tr>`;
+
+        response.data.forEach(entry => {
+          dataRow.push(`<tr><td id="${entry.uid}">${entry.surname}</td></tr>`);
+        });
+
+        document.querySelector("#debtors").innerHTML = `
+          <table class="tftable mx-5 px-5 leading-loose prose-table">
+            <thead>${dataHead}</thead>
+            <tbody>${dataRow.join('')}</tbody>
+          </table>
+        `;
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+  }
+
+  renderPatients() {
+    axios.get('/api/v1/patients')
+      .then(function (response) {
+        const dataRow = [], dataHead = `<tr><th class="p-3 text-sm font-semibold text-left text-gray-700 bg-gray-200">PATIENTS</th></tr>`;
+
+        response.data.forEach(entry => {
+          dataRow.push(`<tr><td id="${entry.uid}">${entry.surname}</td></tr>`);
+        });
+
+        document.querySelector("#patients").innerHTML = `
+          <table class="tftable mx-5 px-5 leading-loose prose-table">
+            <thead>${dataHead}</thead>
+            <tbody>${dataRow.join('')}</tbody>
+          </table>
+        `;
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
   }
 }

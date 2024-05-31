@@ -2,22 +2,7 @@ class Api::V1::SessionsController < ApplicationController
   before_action :load_entity
 
   def create
-    response = connection.post('/api/session') do |req|
-      req.headers[:content_type] = 'application/json'
-      req.body = JSON.generate({
-        model: {
-          timeout: 120
-        },
-        auth: [
-          [
-            "password", {
-              username: @entity.username,
-              password: @entity.password
-            }
-          ]
-        ]
-      })
-    end
+    response = login_session
 
     if response.success?
       token = response.body["data"]["uid"]
@@ -27,13 +12,29 @@ class Api::V1::SessionsController < ApplicationController
       @entity.save!
 
       render json: { token: token }
+    else
+      render json: { error: response.message }
     end
   end
 
-  def render_bookings_json
+  def login_session
     begin
-      response = connection.get('/api/bookings', { fields: ['uid'] }, { 'Cookie' => "_session_id=#{session[:_session_id]}" })
-      render json: response.body
+      connection.post('/api/session') do |req|
+        req.headers[:content_type] = 'application/json'
+        req.body = JSON.generate({
+          model: {
+            timeout: 120
+          },
+          auth: [
+            [
+              "password", {
+                username: @entity.username,
+                password: @entity.password
+              }
+            ]
+          ]
+        })
+      end
     rescue Faraday::Error => e
       puts e.response[:status]
       puts e.response[:body]
@@ -50,7 +51,7 @@ class Api::V1::SessionsController < ApplicationController
   end
 
   def connection
-    @connection ||= Faraday.new('https://dev_interview.qagoodx.co.za') do |config|
+    @connection ||= Faraday.new(Rails.application.credentials.gxweb.base_url) do |config|
       config.request :json
       config.response :json
       config.response :raise_error

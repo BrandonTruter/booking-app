@@ -1,5 +1,6 @@
 class BookingsController < ApplicationController
   before_action :set_booking, only: [:show, :edit, :update, :destroy]
+  before_action :load_booking_data, only: [:new, :edit]
 
   def index
     @bookings = Booking.all.order(created_at: :desc)
@@ -17,11 +18,16 @@ class BookingsController < ApplicationController
 
     respond_to do |format|
       if @booking.save
-        format.html {
-          redirect_to bookings_path, notice: "Booking scheduled successfully."
-        }
+        format.html { redirect_to bookings_path }
+        format.turbo_stream
       else
-        format.html { render :new }
+        format.html {
+          puts @booking.errors.full_message
+          @patients = Patient.all
+          @debtors = Debtor.all
+
+          render :new
+        }
       end
     end
   end
@@ -33,9 +39,9 @@ class BookingsController < ApplicationController
     respond_to do |format|
       if @booking.update(permitted_params)
         format.html { redirect_to bookings_path }
-        format.turbo_stream {
+        format.turbo_stream do
           render turbo_stream: turbo_stream.replace("booking_#{@booking.id}", partial: 'booking', locals: { booking: @booking })
-        }
+        end
       else
         format.html { redirect_to edit_booking_path }
       end
@@ -45,7 +51,9 @@ class BookingsController < ApplicationController
   def destroy
     respond_to do |format|
       if @booking.destroy
-        format.html { redirect_to bookings_path }
+        format.html {
+          redirect_to bookings_path
+        }
         format.turbo_stream
       else
         format.html { redirect_to bookings_path, notice: @booking.errors.full_message }
@@ -54,8 +62,8 @@ class BookingsController < ApplicationController
   end
 
   def search
-    @bookings = Booking.where(start_at: params[:date].to_date.all_day)
-    
+    @bookings = Booking.where(start_time: params[:date].to_date.all_day)
+
     respond_to do |format|
       format.json {
         render json: render_to_string(partial: 'bookings/booking', collection: @bookings, formats: [:html])
@@ -70,7 +78,23 @@ class BookingsController < ApplicationController
   end
 
   def permitted_params
-    params.require(:booking)
-           .permit(:reason, :start_at, :end_at, :booking_type, :status, :diary_id)
+    params
+      .require(:booking)
+      .permit(
+        :reason,
+        :end_at,
+        :duration,
+        :start_time,
+        :diary_id,
+        :debtor_id,
+        :patient_id,
+        :booking_type_uid,
+        :booking_status_uid,
+      )
+  end
+
+  def load_booking_data
+    @patients = Patient.all
+    @debtors = Debtor.all
   end
 end

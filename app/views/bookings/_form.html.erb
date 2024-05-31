@@ -1,80 +1,83 @@
-
 <%= form_with(model: @booking, local: true, class: "my-10") do |f| %>
-  <%= f.hidden_field :diary_id, value: @booking&.diary&.id || Diary.last.id %>
+  <div class="form form-inline">
+    <%= f.hidden_field :diary_id, value: @booking&.diary&.id || Diary.last.id %>
 
-  <% if @booking.errors.any? %>
-    <div class="alert alert-danger mt-2" role="alert">
-      <ul>
-        <% @booking.errors.full_messages.each do |error| %>
-          <li><%= error %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+    <% if @booking.errors.any? %>
+      <div class="alert alert-danger mt-2" role="alert">
+        <ul>
+          <% @booking.errors.full_messages.each do |error| %>
+            <li><%= error %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-  <div class="space-y-12">
-    <div class="border-b border-gray-900 pb-12">
-      <h3 class="text-base font-semibold leading-7 text-gray-900">Booking</h3>
+    <div class="space-y-12">
+      <div class="border-b border-gray-900 pb-12">
+        <h2 class="font-bold text-7xl text-slate-600">Booking</h2>
 
-      <div class="mt-10 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-6">
-        <div class="sm:col-span-3">
-          <label for="booking_reason" class="block text-sm font-medium leading-6 text-gray-900">Reason</label>
-          <div class="mt-2">
-            <input type="text" name="booking[reason]" id="booking_reason" value="<%= @booking&.reason %>" autocomplete="reason" class="form-input block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+        <div class="mt-10 grid grid-cols-3 gap-x-4 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-3 mt-4">
+            <label for="booking_start_at" class="block text-sm font-medium leading-6 text-gray-900">When is your appointment?</label>
+            <div class="mt-2">
+              <input type="datetime-local" name="booking[start_time]" id="booking_start_time" value="<%= @booking&.start_time || Date.today %>" autocomplete="start-time" class="form-input date block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            </div>
           </div>
-        </div>
 
-        <div class="sm:col-span-3">
-          <label for="booking_reason" class="block text-sm font-medium leading-6 text-gray-900">Duration</label>
-          <div class="mt-2">
-            <input type="number" name="booking[duration]" id="booking_duration" value="1" class="h-10 w-24 rounded border-gray-200 sm:text-sm" />
+          <div class="sm:col-span-3 mt-4">
+            <label for="booking_duration" class="block text-sm font-medium leading-6 text-gray-900">How long is your appointment?</label>
+            <div class="mt-2">
+              <input type="number" name="booking[duration]" id="booking_duration" value="<%= @booking&.duration || 1 %>" class="form-input date block w-full rounded border-gray-200 sm:text-sm" />
+            </div>
           </div>
-        </div>
 
-        <div class="sm:col-span-3">
-          <label for="booking_start_at" class="block text-sm font-medium leading-6 text-gray-900">When is your appointment?</label>
-          <div class="mt-2">
-            <input type="datetime-local" name="booking[start_at]" id="booking_start_at" value="<%= @booking&.start_at || Date.today %>" autocomplete="start-at" class="form-input date block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+          <div class="sm:col-span-3 mt-4">
+            <%= f.label :debtor_id, "Debtor", class: 'label block text-sm font-medium leading-6 text-gray-900' %>
+            <div class="mt-2">
+              <%= f.select :debtor_id, debtors_for_select(records: @debtors, selected: @booking&.debtor_id),
+                                      { include_blank: true },
+                                      { class: 'select block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' } %>
+            </div>
           </div>
-        </div>
 
-        <div class="sm:col-span-3">
-          <label for="booking_end_at" class="block text-sm font-medium leading-6 text-gray-900">When does your appointment end?</label>
-          <div class="mt-2">
-            <input id="booking_end_at" name="booking[end_at]" type="datetime-local" value="<%= @booking&.end_at || Date.today %>" autocomplete="end-at" class="form-input block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+          <div class="sm:col-span-3 mt-4">
+            <%= f.label :patient_id, "Patient", class: 'label block text-sm font-medium leading-6 text-gray-900' %>
+            <div class="mt-2">
+              <%= f.select :patient_id, patients_for_select(records: @patients, selected: @booking&.patient_id),
+                                        { include_blank: true },
+                                        { class: 'select block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' } %>
+            </div>
           </div>
-        </div>
 
-        <div class="sm:col-span-3">
-          <label for="booking_type" class="block">
-            <span class="text-gray-700">What type of appointment is it?</span>
-            <select id="booking_type" name="booking[booking_type]" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-              <option>Meeting</option>
-              <option>Follow up</option>
-              <option>Consultation</option>
-              <option>Out of office</option>
-            </select>
-          </label>
-        </div>
+          <div class="sm:col-span-3 mt-4">
+            <%= f.label :booking_type_uid, "Booking type", class: 'label block text-sm font-medium leading-6 text-gray-900' %>
+            <div class="mt-2">
+              <%= f.select :booking_type_uid, booking_types_for_select(selected: @booking&.booking_type_uid),
+                                          { include_blank: true },
+                                          { required: true, class: 'select block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' } %>
+            </div>
+          </div>
 
-        <div class="sm:col-span-3">
-          <label for="booking_status" class="block">
-            <span class="text-gray-700">What is the status of the appointment?</span>
-            <select id="booking_status" name="booking[status]" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-              <option>Booked</option>
-              <option>Arrived</option>
-              <option>Ready</option>
-              <option>Treated</option>
-              <option>Billed</option>
-              <option>Done</option>
-            </select>
-          </label>
-        </div>
+        <div class="sm:col-span-3 mt-4">
+            <%= f.label :booking_status_uid, "Booking status", class: 'label block text-sm font-medium leading-6 text-gray-900' %>
+            <div class="mt-2">
+              <%= f.select :booking_status_uid, Booking::AVAILABLE_STATES, { include_blank: true }, { required: true, class: 'select block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' } %>
+            </div>
+          </div>
 
-        <div class="mt-6 flex items-center justify-end gap-x-6">
-          <%= link_to "Cancel", bookings_path(diary_id: @booking.diary_id), class: 'rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' %>
+          <div class="sm:col-span-3 mt-10">
+            <%= link_to "Cancel", bookings_path(diary_id: @booking.diary_id),
+                                  class: 'bg-gray-800 px-3 py-2 hover:bg-gray-700 text-white text-sm font-semibold px-4 py-1 border border-gray-700 rounded-lg shadow-sm',
+                                  data: { action: "click->booking-ui#hideForm" } %>
+            <%= f.submit "Save", class: 'rounded-md bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600', data: { action: "click->booking-ui#hideForm" } %>
+          </div>
 
-          <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+          <div class="sm:col-span-3 mt-4">
+            <label for="booking_reason" class="block text-sm font-medium leading-6 text-gray-900">What is the reason for your appointment?</label>
+            <div class="mt-2">
+              <input type="text" name="booking[reason]" id="booking_reason" value="<%= @booking&.reason %>" autocomplete="reason" class="form-input block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,10 +1,86 @@
-<div style='border-style: ridge; padding: 20px;'>
-  <b><%= @booking.reason %></b><br>
-  <%= @booking.status %><br>
-  <%= @booking.booking_type %><br>
-  <%= @booking.start_at %><br>
-  <%= @booking.end_at %><br>
+<div class="w-full h-screen bg-slate-800 overflow-x-hidden">
+  <div class="container min-h-[650px] relative w-[] mx-auto p-5px flex rounded-[10px]">
+      <!-- left -->
+      <div class="left w-1/2 p-5">
+          <div id="calender" class="calender relative w-full h-full flex flex-col flex-wrap justify-between  text-rounded-[5px] bg-white">
+              <div id='month' class="month flex text- justify-between items-center w-full h-24 px-14 text-lg font-semibold capitalize">
+                <i id="prev" class="icon fa fa-angle-left prev cursor-pointer"></i>
+                <span id="date" class="date text-center">
 
-  <%= link_to 'Back', diaries_path, class: 'btn btn-primary mt-2' %>
-  <%= link_to 'Edit', edit_booking_path(@booking), class: 'btn btn-primary mt-2' %>
-</div>
+                </span>
+                <i id="next" class="icon fa fa-angle-right next cursor-pointer"></i>
+              </div>
+              <div id='weekdays' class="weekdays flex space-x-2 w-full px-7 text-base font-semibold capitalize justify-between  items-center">
+                <span class="h-full flex justify-center items-center">Sun</span>
+                <span class="h-full flex justify-center items-center">Mon</span>
+                <span class="h-full flex justify-center items-center">Tue</span>
+                <span class="h-full flex justify-center items-center">Wed</span>
+                <span class="h-full flex justify-center items-center">Thur</span>
+                <span class="h-full flex justify-center items-center">Fri</span>
+                <span class="h-full flex justify-center items-center">Sat</span>
+              </div>
+              <div id='days' class="days flex flex-wrap w-full justify-between px-6 text-base mb-6 font-semibold">
+                <div class="day next-date h-[50px] flex justify-center items-center cursor-pointer   w-[13%]"></div>
+              </div>
+              <div id="goto-today" class="goto-today w-full h-[50px] items-center flex justify-between space-x-1 px-5 mb-5">
+                  <div id="goto" class="goto flex items-center rounded-[5px] overflow-hidden border-[1px] border-gray-300">
+                      <input type="text" placeholder="dd/mm/yyyy" id="date-input" class="date-input text-green-800 outline-none rounded-base py-2 px-5 w-full h-6 rounded-md">
+                      <button id="goto-btn" class="goto-btn py-2 px-3 rounded-md bg-transparent border-[1px] text-green-800 hover:text-white hover:bg-orange-600">Go</button>
+                  </div>
+                  <button id="today-btn" class='today-btn  py-2 px-3 rounded-md bg-transparent border-[1px] text-green-800 hover:text-white hover:bg-green-600'>today</button>
+              </div>
+          </div>
+      </div>
+      <!-- right -->
+      <div class="right relative w-[40%] text-white min-h-[100%] px-0 py-8">
+          <div class="today-date flex w-full h-16 flex-wrap space-x-8 justify-between items-center capitalize mt-12 mb-6 px-10 py-0 pl-[70px]">
+              <div class="event-day text-2xl font-semibold">Mon</div>
+              <div class="event-date text-base text-gray-50 font-normal">4, September 2023</div>
+          </div>
+          <div id="events" class="events w-full h-full max-w-[] overflow-y-auto overflow-x-hidden flex flex-col p-1 relative">
+              <div class="event relative w-[95%] h-[70px] flex justify-center flex-col space-x-[5px] color-white px-[20px] pl-[50px] cursor-pointer bg-gradient-to-r from-yellow-400 to-transparent">
+                  <div class="title flex items-center pointer-events-none">
+                      <i class="fas fa-circle"></i>
+                      <h3 class=" event-title text-base ml-[20px]">Event 1</h3>
+                  </div>
+                  <div class="event-time text-sm font-normal pointer-events-none ml-[5px]">
+                      7:00AM - 4:00PM
+                  </div>
+              </div>
+          </div>
+          <div class="add-event-wrapper">
+              <div class="add-event-header">
+                  <div class="title">Add Event</div>
+                  <i class="fas fa-times close"></i>
+              </div>
+              <div class="add-event-body w-full h-full flex flex-col space-y-[5px] p-[20px]">
+                  <div class="add-event-input">
+                      <input type="text" placeholder="Event Name" class="event-name" />
+                  </div>
+                  <div class="add-event-input">
+                      <input
+                          type="text"
+                          placeholder="Event Time From"
+                          class="event-time-from"
+                          value="<%= @booking&.start_time %>"
+                      />
+                  </div>
+                  <div class="add-event-input">
+                      <input
+                          type="text"
+                          placeholder="Event Time To"
+                          class="event-time-to"
+                          value="<%= @booking&.end_at %>"
+                      />
+                  </div>
+              </div>
+              <div class="add-event-footer">
+                  <button class="add-event-btn">Add Event</button>
+              </div>
+          </div>
+          <button class="add-event z-index absolute right-0 bottom-[150px] w-[40px] h-[40px] items-center justify-center text-base border-[2px] border-white rounded-[50%] cursor-pointer bg-transparent opacity-50 hover:opacity-100">
+              <i class="fas fa-plus pointer-events-none"></i>
+          </button>
+      </div>
+   </div>
+ </div>

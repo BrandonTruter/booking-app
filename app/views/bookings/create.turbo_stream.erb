@@ -1,0 +1,6 @@
+<%= turbo_stream.append "bookings" do %>
+    <%= turbo_frame_tag dom_id(@booking) do %>
+        <%= render "bookings/booking", booking: @booking %>
+    <% end %>
+<% end %>
+<%= turbo_stream_from 'bookings' %>
